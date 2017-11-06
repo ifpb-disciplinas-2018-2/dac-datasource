@@ -48,21 +48,21 @@ COPY target/app.war ${CATALINA_HOME}/webapps
 
 ## Executar comandos no container  
 Para executarmos comandos necessitamos de executar o comando `docker exec -it <container_id | container_name> <command>`. 
-Por exemplo, para termos acesso aco container do banco que configuramos podemos fazer:
+Por exemplo, para termos acesso ao container do banco que configuramos podemos fazer:
 
 `docker exec -it banco /bin/bash`:  
 *`-it`: para termos acesso iterativo ao TTY*  
 *`banco`: o nome do container que desejamos seja executar determinado comando*  
 *`/bin/bash`: o comando que vamos executar no container*  
 
-Após esses passos, teremos acesso ao terminal do container. Podemos acessar o _database_ que configuramos no arquivo `Dockerfile` que configura o banco de dados, neste exemplo `dac-cliente`.
+Após esses passos, teremos acesso ao terminal do container. Podemos acessar o _database_ que definimos no arquivo `Dockerfile` que configura o banco de dados, neste exemplo `dac-cliente`.
 
 `psql -U postgres dac-cliente`:  
 *`-U`: usuário configurado*  
 *`dac-cliente`: o _database_ que desejamos acessar* 
 
-Alguns comando úteis no `psql`:
-*`\dt`: lista as tabelas do _database_*  
-*`select * from cliente;`: seleciona todos os clientes*
-*`INSERT INTO cliente(nome, cpf) VALUES ('Kiko','123.132.121-31');`: insere um novo cliente*  
+Alguns comando úteis no `psql`:  
+*`\dt`: lista as tabelas do _database_*    
+*`select * from cliente;`: seleciona todos os clientes*  
+*`INSERT INTO cliente(nome, cpf) VALUES ('Kiko','123.132.121-31');`: insere um novo cliente*    
 *`\q`: sair do _database_*  
