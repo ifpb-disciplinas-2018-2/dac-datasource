@@ -2,7 +2,6 @@ package br.edu.ifpb.infra;
 
 import br.edu.ifpb.domain.Cliente;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,28 +10,31 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.sql.DataSource;
 
 /**
  * @author Ricardo Job
  * @mail ricardo.job@ifpb.edu.br
  * @since 06/11/2017, 09:00:18
  */
-public class ClientesJDBC {
+@Stateless
+public class Clientes {
 
-    private Connection connection;
+//    private Connection connection;
+    @Resource(name = "java:app/jdbc/exemplo")
+    private DataSource dataSource;
 
     public Iterator<Cliente> todosOsClientes() {
         ArrayList<Cliente> clientes = new ArrayList<>();
-        try {
-            iniciarConexao();
-            try (Statement createStatement = this.connection.createStatement()) {
+        try (Connection connection = dataSource.getConnection()) {
+            try (Statement createStatement = connection.createStatement()) {
                 ResultSet executeQuery = createStatement.executeQuery("Select * from cliente;");
                 clientes.addAll(listarClientesDoResultSet(executeQuery));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(ClientesJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            finalizarConexao();
+            Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return clientes.iterator();
@@ -49,29 +51,5 @@ public class ClientesJDBC {
         return clientes;
 
     }
-
-    private void iniciarConexao() {
-        try {
-            Class.forName("org.postgresql.Driver");
-            //jdbc:postgresql://localhost:5432/dac-cliente
-            this.connection = DriverManager.getConnection(
-                    "jdbc:postgresql://host-banco:5432/dac-cliente",
-                    "postgres", "12345");
-        } catch (SQLException | ClassNotFoundException ex) {
-            Logger.getLogger(ClientesJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private void finalizarConexao() {
-        if (this.connection == null) {
-            return;
-        }
-        try {
-            this.connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(ClientesJDBC.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    }
-
+ 
 }

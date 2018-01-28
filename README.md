@@ -15,19 +15,43 @@ COPY insert.sql /docker-entrypoint-initdb.d/
 
 ## Criar o arquivo `Dockerfile` da aplicação
 ```
-FROM tomcat
-COPY target/app.war ${CATALINA_HOME}/webapps
+FROM payara/server-full
+ENV DOMAIN domain1
+ENV LIB /opt/payara41/glassfish/domains/${DOMAIN}/lib/
+ENV DEPLOY ${PAYARA_PATH}/glassfish/domains/${DOMAIN}/autodeploy/
+ADD  target/datasource/WEB-INF/lib/ ${LIB}
+ENTRYPOINT $PAYARA_PATH/bin/asadmin start-domain --verbose ${DOMAIN}
+ADD  target/datasource.war  ${DEPLOY}
+```
+
+## Criar o arquivo `glassfish-resources.xml`, na pasta `WEB-INF`. Algumas das configurações para criação do Pool de Conexão e recurso JDBC.
+
+```
+<resources>
+    <jdbc-connection-pool allow-non-component-callers="false" 
+                          name="post-gre-sql_exemplo-dac_postgresPool" 
+                          wrap-jdbc-objects="false">
+        <property name="serverName" value="host-banco"/>
+        <property name="portNumber" value="5432"/>
+        <property name="databaseName" value="dac-cliente"/>
+        <property name="User" value="postgres"/>
+        <property name="Password" value="12345"/>
+        <property name="driverClass" value="org.postgresql.Driver"/>
+    </jdbc-connection-pool>
+    <jdbc-resource enabled="true" jndi-name="java:app/jdbc/exemplo" 
+                   object-type="user" pool-name="post-gre-sql_exemplo-dac_postgresPool"/>
+</resources>
 ```
 
 ## Criar uma imagem da aplicação
 
-`docker build -t ricardojob/aula:2 .`:  
+`docker build -t ricardojob/datasource .`:  
 *`-t`: qual a tag que vamos atribuir a essa imagem*  
 *`.`: caminho relativo (ou absoluto) para o arquivo Dockerfile*  
 
 ## Executar o container  
 `docker run -p 5433:5432 -d --name banco ricardojob/banco` e 
-`docker run -p 8081:8080 -d --name app --link banco:host-banco ricardojob/aula:2`:   
+`docker run -p 8080:8080 -p 4848:4848 -d --name app --link banco:host-banco ricardojob/datasource`:   
 *`-p`: o bind entre a porta do host local com a porta do container*  
 *`-d`: o container seja executar em background*  
 *`--link`: o bind entre os containers, para pertimir que o container da aplicação tenha acesso ao container do banco*  

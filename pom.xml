@@ -7,7 +7,7 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
 
-    <name>app</name>
+    <name>datasource</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,14 +23,14 @@
         </dependency>
         <dependency>
             <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
+            <artifactId>javaee-api</artifactId>
             <version>7.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>app</finalName>
+        <finalName>datasource</finalName>
     </build>
 
 </project>

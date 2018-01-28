@@ -1,0 +1,15 @@
+#derby
+asadmin create-jdbc-connection-pool --datasourceclassname=org.apache.derby.jdbc.ClientDataSource --restype=javax.sql.DataSource --property portNumber=1527:password=APP:user=APP:serverName=localhost: databaseName=exemplo:connectionAttributes=;create\=true exemploPool
+
+#postgresql
+asadmin create-jdbc-connection-pool --datasourceclassname=org.postgresql.xa.PGXADataSource --restype javax.sql.XADataSource --property password=12345:user=postgres:DatabaseName=exemplo-dac:ServerName=localhost:port=5432 exemploPool
+
+# criando o recurso
+asadmin create-jdbc-resource --connectionpoolid exemploPool jdbc/exemplo
+
+#listar os pools
+list-jdbc-connection-pools 
+
+#listar os recursos JDBC
+list-jdbc-resources  
+
