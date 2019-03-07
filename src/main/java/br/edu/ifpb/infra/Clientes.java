@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 /**
  * @author Ricardo Job
  * @mail ricardo.job@ifpb.edu.br
- * @since 06/11/2017, 09:00:18
+ * @since 06/03/2019, 09:06:05
  */
 @Stateless
 public class Clientes {

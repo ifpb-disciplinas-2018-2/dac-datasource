@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * @author Ricardo Job
  * @mail ricardo.job@ifpb.edu.br
- * @since 06/11/2017, 08:56:05
+ * @since 06/03/2019, 08:56:05
  */
 public class Cliente implements Serializable{
 
